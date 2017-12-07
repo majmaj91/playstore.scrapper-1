@@ -38,19 +38,40 @@ app.get('/:appId/similar', (req, res) => {
 });
 
 app.get('/:appId/comments', (req, res) => {
-  gplay.reviews({appId: req.params.appId, page: 0, sort: gplay.sort.NEWEST}).then(function(comments){
-    res.json(comments);
+  var page = 0*5;
+  var allComments = [];
+  gplay.reviews({appId: req.params.appId, page: page+0, sort: gplay.sort.NEWEST}).then(function(comments){
+    allComments = allComments.concat(comments);
+    gplay.reviews({appId: req.params.appId, page: page+1, sort: gplay.sort.NEWEST}).then(function(comments){
+      allComments = allComments.concat(comments);
+      gplay.reviews({appId: req.params.appId, page: page+2, sort: gplay.sort.NEWEST}).then(function(comments){
+        allComments = allComments.concat(comments);
+        gplay.reviews({appId: req.params.appId, page: page+3, sort: gplay.sort.NEWEST}).then(function(comments){
+          allComments = allComments.concat(comments);
+          gplay.reviews({appId: req.params.appId, page: page+4, sort: gplay.sort.NEWEST}).then(function(comments){
+            allComments = allComments.concat(comments);
+            res.json(allComments);
+          });
+        });
+      });
+    });
   });
 });
 
 app.get('/:appId/comments/:page', (req, res) => {
   var page = req.params.page*5;
+  var allComments = [];
   gplay.reviews({appId: req.params.appId, page: page+0, sort: gplay.sort.NEWEST}).then(function(comments){
+    allComments = allComments.concat(comments);
     gplay.reviews({appId: req.params.appId, page: page+1, sort: gplay.sort.NEWEST}).then(function(comments){
+      allComments = allComments.concat(comments);
       gplay.reviews({appId: req.params.appId, page: page+2, sort: gplay.sort.NEWEST}).then(function(comments){
+        allComments = allComments.concat(comments);
         gplay.reviews({appId: req.params.appId, page: page+3, sort: gplay.sort.NEWEST}).then(function(comments){
+          allComments = allComments.concat(comments);
           gplay.reviews({appId: req.params.appId, page: page+4, sort: gplay.sort.NEWEST}).then(function(comments){
-            res.json(comments);
+            allComments = allComments.concat(comments);
+            res.json(allComments);
           });
         });
       });
