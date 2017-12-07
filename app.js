@@ -44,8 +44,17 @@ app.get('/:appId/comments', (req, res) => {
 });
 
 app.get('/:appId/comments/:page', (req, res) => {
-  gplay.reviews({appId: req.params.appId, page: req.params.page, sort: gplay.sort.NEWEST}).then(function(comments){
-    res.json(comments);
+  var page = req.params.page*5;
+  gplay.reviews({appId: req.params.appId, page: page+0, sort: gplay.sort.NEWEST}).then(function(comments){
+    gplay.reviews({appId: req.params.appId, page: page+1, sort: gplay.sort.NEWEST}).then(function(comments){
+      gplay.reviews({appId: req.params.appId, page: page+2, sort: gplay.sort.NEWEST}).then(function(comments){
+        gplay.reviews({appId: req.params.appId, page: page+3, sort: gplay.sort.NEWEST}).then(function(comments){
+          gplay.reviews({appId: req.params.appId, page: page+4, sort: gplay.sort.NEWEST}).then(function(comments){
+            res.json(comments);
+          });
+        });
+      });
+    });
   });
 });
 
